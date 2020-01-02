@@ -72,8 +72,6 @@ On the __lib/clientFactories/topics.js__
 		} else {
 			await client.addRule("$Default", "1=1");
 		}
-		let rules = await client.getRules()
-		console.log(rules)
 		registeredClients.push(client);
 		const receiver = client.createReceiver();
 		registeredReceivers.push(receiver);

@@ -20,20 +20,20 @@ module.exports = () => {
 
 		
 		let o = 1;
-		const processTestCreatedDefault = async message => {
-			console.log('Test Creation particle active: Default. ', o);
+		const processDefault = async message => {
+			console.log('Default. ', o);
 			o++;
 		};
 
 		let m = 1;
-		const processTestCreatedNoordhoff = async message => {
-			console.log('Test Creation particle active: Noordhoff', m);
+		const processNoordhoff = async message => {
+			console.log('Noordhoff', m);
 			m++;
 		};
 
 		let n = 1;
-		const processTestCreatedPlantyn = async message => {
-			console.log('Test Creation particle active: Plantyn', n);
+		const processPlantyn = async message => {
+			console.log('Plantyn', n);
 			n++;
 		};
 		
@@ -47,27 +47,27 @@ module.exports = () => {
 
 		const subscribeWithFilters = async () =>{
 				
-			await subscribe('defaultSubscription', processTestCreatedDefault);
-			await subscribe('noordhoffSubscription', processTestCreatedNoordhoff, noordhoffFilter );
-			await subscribe('plantynSubscription', processTestCreatedPlantyn, plantynFilter);
-
-			await bus.publish('particleCreated')(body, metadataNoordhoff);
-			await bus.publish('particleCreated')(body, metadataPlantyn);
-			await bus.publish('particleCreated')(body);
+			await subscribe('defaultSubscription', processDefault);
+			await subscribe('noordhoffSubscription', processNoordhoff, noordhoffFilter );
+			await subscribe('plantynSubscription', processPlantyn, plantynFilter);
 		}
 
 		const subscribeWithNoFilters = async () =>{
 				
-			await subscribe('defaultSubscription', processTestCreatedDefault);
-			await subscribe('noordhoffSubscription', processTestCreatedNoordhoff );
-			await subscribe('plantynSubscription', processTestCreatedPlantyn);
+			await subscribe('defaultSubscription', processDefault);
+			await subscribe('noordhoffSubscription', processNoordhoff );
+			await subscribe('plantynSubscription', processPlantyn);
+		}
 
+		const publishContents = async () =>{
+			m= n = o = 1;
 			await bus.publish('particleCreated')(body, metadataNoordhoff);
 			await bus.publish('particleCreated')(body, metadataPlantyn);
 			await bus.publish('particleCreated')(body);
 		}
 
 		const removeRules = async () => {
+			m= n = o = 1;
 			let defaultRules = await bus.removeRules('defaultSubscription');
 			let noordhoffRules = await bus.removeRules('noordhoffSubscription');
 			let plantynRules = await bus.removeRules('plantynSubscription');
@@ -79,6 +79,7 @@ module.exports = () => {
 		}
 
 		const getRules = async () => {
+			m= n = o = 1;
 			let defaultRules = await bus.getRules('defaultSubscription');
 			let noordhoffRules = await bus.getRules('noordhoffSubscription');
 			let plantynRules = await bus.getRules('plantynSubscription');
@@ -105,7 +106,7 @@ module.exports = () => {
 
 	
 
-		return {subscribeWithFilters, subscribeWithNoFilters, removeRules, getRules};
+		return {subscribeWithFilters, subscribeWithNoFilters, publishContents, removeRules, getRules};
 	};
 	return { start };
 };
