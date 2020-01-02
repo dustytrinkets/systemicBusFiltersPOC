@@ -17,7 +17,6 @@ module.exports = () => {
 		const onError = mess => console.error(mess);
 		const onStop = mess => console.warn(mess);
 		const subscribe = await bus.subscribe(onError, onStop);
-		const subscribeWithReceiver = bus.subscribeWithReceiver(onError, onStop);
 
 		
 		let o = 1;
@@ -68,23 +67,6 @@ module.exports = () => {
 			await bus.publish('particleCreated')(body);
 		}
 
-		const subscribeSync = async () =>{
-
-			let defaultReceiver = await bus.createReceiverWithRule('defaultSubscription');
-			let noordhoffReceiver = await bus.createReceiverWithRule('noordhoffSubscription', noordhoffFilter);
-			let plantynReceiver = await bus.createReceiverWithRule('plantynSubscription', plantynFilter);
-			
-			subscribeWithReceiver('defaultSubscription', processTestCreatedDefault, defaultReceiver);
-			subscribeWithReceiver('noordhoffSubscription', processTestCreatedNoordhoff,  noordhoffReceiver);
-			subscribeWithReceiver('plantynSubscription', processTestCreatedPlantyn,  plantynReceiver);
-
-			await bus.publish('particleCreated')(body, metadataNoordhoff);
-			await bus.publish('particleCreated')(body, metadataPlantyn);
-			await bus.publish('particleCreated')(body);
-
-			m, n, o = 1;
-		}
-
 		const removeRules = async () => {
 			let defaultRules = await bus.removeRules('defaultSubscription');
 			let noordhoffRules = await bus.removeRules('noordhoffSubscription');
@@ -123,7 +105,7 @@ module.exports = () => {
 
 	
 
-		return {subscribeWithFilters, subscribeWithNoFilters, subscribeSync, removeRules, getRules};
+		return {subscribeWithFilters, subscribeWithNoFilters, removeRules, getRules};
 	};
 	return { start };
 };

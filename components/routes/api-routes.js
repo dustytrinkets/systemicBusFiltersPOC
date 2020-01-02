@@ -20,15 +20,6 @@ module.exports = () => {
 			}
 		});
 
-		app.post('/sync', async (req, res, next) => {
-			try {
-				const result = await controller.subscribeSync();
-				return res.json(result);
-			} catch (error) {
-				return next(tagError(error));
-			}
-		});
-
 		app.post('/removerules', async (req, res, next) => {
 			try {
 				const result = await controller.removeRules();
