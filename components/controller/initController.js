@@ -5,14 +5,12 @@ module.exports = () => {
 
 		const metadataNoordhoff = {
 			userProperties: {
-				liberContent: 'Noordhoff',
+				opco: 'Noordhoff',
 			},
 		}
 		const metadataPlantyn = {
-			userProperties: {
-				liberContent: 'Plantyn',
-			},
-		}
+			contentType: 'Plantyn',
+		};
 
 		const onError = mess => console.error(mess);
 		const onStop = mess => console.warn(mess);
@@ -38,12 +36,18 @@ module.exports = () => {
 		};
 		
 
-		const filterConstructor = (property, value) => ({
-			property,
-			value: `${property}='${value}'`
+		const sqlFilterConstructor = (ruleName, value) => ({
+			ruleName,
+			value: `${ruleName}='${value}'`
 		});
-		let noordhoffFilter = filterConstructor('liberContent', 'Noordhoff')
-		let plantynFilter = filterConstructor('liberContent', 'Plantyn')
+
+		const correlationFilterConstructor = (ruleName, value) => ({
+			ruleName,
+			value,
+		});
+
+		let noordhoffFilter = sqlFilterConstructor('opco', 'Noordhoff')
+		let plantynFilter = correlationFilterConstructor('opco', {contentType:'Plantyn'})
 
 		const subscribeWithFilters = async () =>{
 				
@@ -80,9 +84,9 @@ module.exports = () => {
 
 		const getRules = async () => {
 			m= n = o = 1;
-			let defaultRules = await bus.getRules('defaultSubscription');
-			let noordhoffRules = await bus.getRules('noordhoffSubscription');
-			let plantynRules = await bus.getRules('plantynSubscription');
+			let defaultRules = await bus.getSubscriptionRules('defaultSubscription');
+			let noordhoffRules = await bus.getSubscriptionRules('noordhoffSubscription');
+			let plantynRules = await bus.getSubscriptionRules('plantynSubscription');
 			return {
 				defaultRules,
 				noordhoffRules,
