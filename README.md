@@ -43,17 +43,18 @@ On the __index.js__:
 -  Add and export these functions:
 
     ```
-    const removeRules = async (subscriptionId) => {
+    const removeSubscriptionRules = async (subscriptionId) => {
         const { topic, subscription } = subscriptions[subscriptionId] || {};
         if (!topic || !subscription) throw new Error(`Data for subscription ${subscriptionId} non found!`);
         const rules = await topicClientFactory.removeClientRules(topic, subscription);
         return rules;
     };
 
-    const getRules = async (subscriptionId) => {
+    const getSubscriptionRules = async subscriptionId => {
         const { topic, subscription } = subscriptions[subscriptionId] || {};
         if (!topic || !subscription) throw new Error(`Data for subscription ${subscriptionId} non found!`);
-        const rules = await topicClientFactory.getClientRules(topic, subscription);
+        const client = connection.createSubscriptionClient(topic, subscription);
+        let rules = await client.getRules();
         return rules;
     };
     ```
@@ -96,21 +97,14 @@ On the __lib/clientFactories/topics.js__
 		await asyncForEach(rules, async rule => {
 			await client.removeRule(rule.name)
 		})
-
-	}
-
-	const getClientRules = async (topic, subscription) =>{
-		const client = connection.createSubscriptionClient(topic, subscription);
-		let rules = await client.getRules();
-		return rules
 	}
 
 	const removeClientRules = async (topic, subscription) =>{
 		const client = connection.createSubscriptionClient(topic, subscription);
 		await removeAllRules(client);
 		await client.addRule("$Default", "1=1");
-		let rules = await client.getRules()
 		registeredClients.push(client);	
+		let rules = await client.getRules()
 		return rules
 	}
     ```

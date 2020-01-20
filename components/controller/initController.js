@@ -72,9 +72,9 @@ module.exports = () => {
 
 		const removeRules = async () => {
 			m= n = o = 1;
-			let defaultRules = await bus.removeRules('defaultSubscription');
-			let noordhoffRules = await bus.removeRules('noordhoffSubscription');
-			let plantynRules = await bus.removeRules('plantynSubscription');
+			let defaultRules = await bus.removeSubscriptionRules('defaultSubscription');
+			let noordhoffRules = await bus.removeSubscriptionRules('noordhoffSubscription');
+			let plantynRules = await bus.removeSubscriptionRules('plantynSubscription');
 			return {
 				defaultRules,
 				noordhoffRules,
